@@ -1,0 +1,62 @@
+cloud\_utilities package
+========================
+
+Submodules
+----------
+
+cloud\_utilities.aiops module
+-----------------------------
+
+.. automodule:: cloud_utilities.aiops
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+cloud\_utilities.cos module
+---------------------------
+
+.. automodule:: cloud_utilities.cos
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+cloud\_utilities.exceptions module
+----------------------------------
+
+.. automodule:: cloud_utilities.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+cloud\_utilities.sql\_magic module
+----------------------------------
+
+.. automodule:: cloud_utilities.sql_magic
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+cloud\_utilities.sql\_query module
+----------------------------------
+
+.. automodule:: cloud_utilities.sql_query
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+cloud\_utilities.utilities module
+---------------------------------
+
+.. automodule:: cloud_utilities.utilities
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: cloud_utilities
+    :members:
+    :undoc-members:
+    :show-inheritance:
