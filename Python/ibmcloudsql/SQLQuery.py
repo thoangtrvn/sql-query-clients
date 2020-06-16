@@ -207,24 +207,18 @@ class SQLQuery(COSClient, SQLMagic, HiveMetastore):
                 headers=self.request_headers,
                 json=json_data)
 
-            resp = response.json()
-            if 'status_code' in resp:
-                status_code = resp["status_code"]
-                # Throw in case we hit the rate limit
-                if (status_code == 429):
-                    while True:
-                        if (self.get_number_running_jobs() <
-                                self.max_concurrent_jobs):
-                            break
-                        time.sleep(3)  # seconds
-                    raise RateLimitedException(
-                        "SQL submission failed ({code}): {msg}".format(
-                            code=status_code,
-                            msg=response.json()['errors'][0]['message']))
+            # Throw in case we hit the rate limit
+            if (response.status_code == 429):
+                time.sleep(3)  # seconds
+                raise RateLimitedException(
+                    "SQL submission failed ({code}): {msg}".format(
+                        code=status_code,
+                        msg=response.json()['errors'][0]['message']))
 
             # any other error but 429 will be raised here, like 403 etc
             response.raise_for_status()
 
+            resp = response.json()
             if 'job_id' in resp:
                 return resp['job_id']
             else:
@@ -232,9 +226,9 @@ class SQLQuery(COSClient, SQLMagic, HiveMetastore):
         except (KeyError, HTTPError) as _:
             raise SyntaxError(
                 "SQL submission failed ({code}): {msg} - {query}".format(
-                    code=status_code,
+                    code=response.status_code,
                     msg=response.json()['errors'][0]['message'],
-                    query=pformat(sqlData)))
+                    query=pformat(json_data)))
 
     def submit(self,
                    pagesize=None,
@@ -258,7 +252,7 @@ class SQLQuery(COSClient, SQLMagic, HiveMetastore):
             an integer indicating the number of rows for each partition/page
             [using PARTITIONED EVERY <pagesize> ROWS syntax]
         blocking : bool, optional (default=True)
-            If True, wait until the queue is available
+            If True, wait until it can get the job_id, i.e. when the queue is available
 
             Default, wait. Otherwise, return if the queue is not available
 
@@ -337,8 +331,6 @@ class SQLQuery(COSClient, SQLMagic, HiveMetastore):
 
         """
         self.logon()
-        self.request_headers["authorization"] = self.request_headers[
-            "authorization"]
         sql_text = sql_stmt
         sqlData = {'statement': sql_text}
 
